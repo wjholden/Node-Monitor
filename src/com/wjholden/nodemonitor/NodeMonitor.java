@@ -1,6 +1,5 @@
 package com.wjholden.nodemonitor;
 
-import java.awt.event.KeyListener;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.ArrayList;

@@ -31,7 +31,7 @@ public class NodePanel extends JPanel {
     public NodePanel(Node a[]) {
         this.a = a;
         c = new Color[a.length];
-        ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
+        ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(10);
         for (int i = 0; i < a.length; i++) {
             final int x = i;
             executor.scheduleAtFixedRate(

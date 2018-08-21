@@ -42,18 +42,18 @@ public class MonitorFrame extends JFrame implements KeyListener {
     public void keyTyped(KeyEvent e) {
         switch (e.getKeyChar()) {
             case 'q': System.exit(0); break;
+            case '+': NodePanel.fontSize *= 1.4F; break;
+            case '-': NodePanel.fontSize /= 1.4F; break;
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP: NodePanel.yoffset -= 1; System.out.println("up"); break;
-            case KeyEvent.VK_DOWN: NodePanel.yoffset += 1; System.out.println("down"); break;
-            case KeyEvent.VK_LEFT: NodePanel.xoffset -= 1; System.out.println("left"); break;
-            case KeyEvent.VK_RIGHT: NodePanel.xoffset += 1; System.out.println("right"); break;
-            case KeyEvent.VK_PLUS: NodePanel.fontSize++; break;
-            case KeyEvent.VK_MINUS: NodePanel.fontSize--; break;
+            case KeyEvent.VK_UP: NodePanel.yoffset -= 1; break;
+            case KeyEvent.VK_DOWN: NodePanel.yoffset += 1; break;
+            case KeyEvent.VK_LEFT: NodePanel.xoffset -= 1; break;
+            case KeyEvent.VK_RIGHT: NodePanel.xoffset += 1; break;
         }
         panel.repaint();
     }
