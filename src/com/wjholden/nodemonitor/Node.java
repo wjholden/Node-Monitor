@@ -27,7 +27,6 @@ final public class Node implements Comparable<Node> {
         this.timeout = timeout;
         
         long addr = 0;
-        System.out.println(Arrays.toString(ip.getAddress()));
         for (byte b : ip.getAddress()) {
             addr |= (long)(0xff & b);
             addr <<= 8;

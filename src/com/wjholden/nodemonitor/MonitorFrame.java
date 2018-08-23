@@ -44,6 +44,7 @@ public class MonitorFrame extends JFrame implements KeyListener {
             case 'q': System.exit(0); break;
             case '+': NodePanel.fontSize *= 1.4F; break;
             case '-': NodePanel.fontSize /= 1.4F; break;
+            case 'f': setFullscreen(); break;
         }
     }
 
@@ -61,5 +62,24 @@ public class MonitorFrame extends JFrame implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         
+    }
+    
+    /**
+     * Copied from Route-Monitor program I wrote.
+     */
+    private void setFullscreen() {
+        this.dispose();
+        if (isUndecorated()) {
+            // clear the maximized bits (4 and 2) if fullscreen -> normal
+            setExtendedState(getExtendedState() & (~JFrame.MAXIMIZED_BOTH));
+            setUndecorated(false);
+        } else {
+            // set the maximized bits if normal -> fullscreen
+            setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            setUndecorated(true);
+        }
+        this.setLocation(0, 0);
+        this.pack();
+        this.setVisible(true);
     }
 }
