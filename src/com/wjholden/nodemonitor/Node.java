@@ -7,25 +7,37 @@ package com.wjholden.nodemonitor;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
  *
  * @author William John Holden (wjholden@gmail.com)
  */
-final public class Node {
+final public class Node implements Comparable<Node> {
     protected final InetAddress ip;
+    private final Long ipAsInteger;
     private final String description;
+    protected final int interval, timeout;
     
-    public Node(String address, String description) throws UnknownHostException {
+    public Node(String address, String description, int interval, int timeout) throws UnknownHostException {
         ip = InetAddress.getByName(address);
         this.description = description;
+        this.interval = interval;
+        this.timeout = timeout;
+        
+        long addr = 0;
+        System.out.println(Arrays.toString(ip.getAddress()));
+        for (byte b : ip.getAddress()) {
+            addr |= (long)(0xff & b);
+            addr <<= 8;
+        }
+        ipAsInteger = addr;
     }
     
     @Override
     public String toString() {
-        if (description == null) return ip.getHostAddress();
-        else return description + "\n" + ip.getHostAddress();
+        return description + "\n" + ip.getHostAddress() + "\n" + ipAsInteger;
     }
 
     @Override
@@ -52,6 +64,11 @@ final public class Node {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return this.ipAsInteger.compareTo(o.ipAsInteger);
     }
     
     

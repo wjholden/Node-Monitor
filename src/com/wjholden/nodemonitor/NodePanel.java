@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -37,12 +36,12 @@ public class NodePanel extends JPanel {
             executor.scheduleAtFixedRate(
                 () -> {
                     try {
-                        c[x] = a[x].ip.isReachable(2000) ? Color.GREEN : Color.RED;
+                        c[x] = a[x].ip.isReachable(a[x].timeout * 1000) ? Color.GREEN : Color.RED;
                     } catch (IOException ex) {
                         c[x] = Color.BLUE;
                     }
                 },
-                0, 5, TimeUnit.SECONDS);
+                0, a[x].interval, TimeUnit.SECONDS);
         }
     }
     
