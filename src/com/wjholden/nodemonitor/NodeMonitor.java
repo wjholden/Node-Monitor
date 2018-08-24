@@ -23,6 +23,7 @@ public class NodeMonitor {
         parse.put("interval", s -> pollInterval = Integer.valueOf(s));
         parse.put("timeout", s -> pollTimeout = Integer.valueOf(s));
         parse.put("node", s -> {
+            s = s.trim();
             try {
                 if (s.contains(" ")) {
                     nodes.add(new Node(s.substring(0, s.indexOf(" ")), s.substring(s.indexOf(" ") + 1), pollInterval, pollTimeout));
@@ -39,11 +40,7 @@ public class NodeMonitor {
     public static void main(String[] args) throws UnknownHostException {
         try (Scanner scanner = new Scanner(System.in)) {
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.length() == 0) break;
-                else {
-                    parse.get(line.substring(0, line.indexOf(" "))).accept(line.substring(line.indexOf(" ") + 1));
-                }
+                parse.get(scanner.next()).accept(scanner.nextLine());
             }
         }
         Collections.sort(nodes);

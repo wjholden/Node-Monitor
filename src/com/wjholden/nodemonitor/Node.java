@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.wjholden.nodemonitor;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -22,6 +16,7 @@ final public class Node implements Comparable<Node> {
     
     public Node(String address, String description, int interval, int timeout) throws UnknownHostException {
         ip = InetAddress.getByName(address);
+        
         this.description = description;
         this.interval = interval;
         this.timeout = timeout;
@@ -36,7 +31,7 @@ final public class Node implements Comparable<Node> {
     
     @Override
     public String toString() {
-        return description + "\n" + ip.getHostName();
+        return description + "\n" + ip.getHostAddress();
     }
 
     @Override
