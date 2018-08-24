@@ -24,7 +24,11 @@ public class NodeMonitor {
         parse.put("timeout", s -> pollTimeout = Integer.valueOf(s));
         parse.put("node", s -> {
             try {
-                nodes.add(new Node(s.substring(0, s.indexOf(" ")), s.substring(s.indexOf(" ") + 1), pollInterval, pollTimeout));
+                if (s.contains(" ")) {
+                    nodes.add(new Node(s.substring(0, s.indexOf(" ")), s.substring(s.indexOf(" ") + 1), pollInterval, pollTimeout));
+                } else {
+                    nodes.add(new Node(s, null, pollInterval, pollTimeout));
+                }
             } catch (UnknownHostException ex) {
                 System.err.println(ex);
                 System.exit(1);

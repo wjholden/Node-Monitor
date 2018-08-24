@@ -36,7 +36,7 @@ final public class Node implements Comparable<Node> {
     
     @Override
     public String toString() {
-        return description + "\n" + ip.getHostAddress() + "\n" + ipAsInteger;
+        return description + "\n" + ip.getHostName();
     }
 
     @Override
