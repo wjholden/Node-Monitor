@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.wjholden.nodemonitor;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -19,7 +15,7 @@ import javax.swing.JPanel;
  *
  * @author William John Holden (wjholden@gmail.com)
  */
-public class NodePanel extends JPanel {
+public final class NodePanel extends JPanel {
 
     protected static int xoffset = 20;
     protected static int yoffset = 50;
@@ -43,6 +39,27 @@ public class NodePanel extends JPanel {
                 },
                 0, a[x].interval, TimeUnit.SECONDS);
         }
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Figure out which rectangle was clicked. Guess I should have
+                // made each of those rectangles their own object.
+                int r = (int) Math.ceil(Math.sqrt(a.length));
+                int row = e.getY() / (getHeight() / r);
+                int col = e.getX() / (getWidth() / r);
+                int index = col + row * r;
+                
+                if (e.getClickCount() >= 2) {
+                    try {
+                        // yes, this is system-specific. Just need something to work for now.
+                        // (https://github.com/wjholden/Node-Monitor/issues/1)
+                        Runtime.getRuntime().exec("putty " + a[index].ip.getHostAddress());
+                    } catch (IOException ex) {
+                        System.err.println(ex);
+                    }
+                }
+            }
+        });
     }
     
     @Override

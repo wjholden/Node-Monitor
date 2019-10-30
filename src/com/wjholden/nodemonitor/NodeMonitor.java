@@ -22,11 +22,13 @@ public class NodeMonitor {
         
         try (Scanner scanner = new Scanner(input)) {
             while (scanner.hasNextLine()) {
-                String[] line = scanner.nextLine().split("\\t"); // just a single tab to allow spaces in node description.
+                String inputLine = scanner.nextLine();
+                if (inputLine.startsWith("#")) continue; // the "#" character effectively comments out a line. (https://github.com/wjholden/Node-Monitor/issues/3)
+                String[] line = inputLine.split("\\t"); // just a single tab to allow spaces in node description.
                 final String ip = line[0].trim(); // apparently there is a weird bug with PowerShell's Get-Content command.
                 final int interval = line.length > 1 ? Integer.parseInt(line[1]) : 2;
                 final int timeout = line.length > 2 ? Integer.parseInt(line[2]) : interval * 3;
-                final String description = line.length > 3 ? line[3] : "";
+                final String description = line.length > 3 ? line[3].replaceAll("^\"", "").replaceAll("\"$", "") : ""; // ignore quotation marks (https://github.com/wjholden/Node-Monitor/issues/2)
                 try {
                     Node n = new Node(ip, description, interval, timeout);
                     nodes.add(n);
