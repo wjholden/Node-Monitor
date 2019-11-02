@@ -13,8 +13,9 @@ final public class Node implements Comparable<Node> {
     private final Long ipAsInteger;
     private final String description;
     protected final int interval, timeout;
+    protected final String onDoubleClick;
     
-    public Node(String address, String description, int interval, int timeout) throws UnknownHostException {
+    public Node(String address, String description, int interval, int timeout, String onDoubleClick) throws UnknownHostException {
         ip = InetAddress.getByName(address);
         
         this.description = description;
@@ -27,6 +28,8 @@ final public class Node implements Comparable<Node> {
             addr <<= 8;
         }
         ipAsInteger = addr;
+        
+        this.onDoubleClick = onDoubleClick;
     }
     
     @Override

@@ -53,7 +53,7 @@ public final class NodePanel extends JPanel {
                     try {
                         // yes, this is system-specific. Just need something to work for now.
                         // (https://github.com/wjholden/Node-Monitor/issues/1)
-                        Runtime.getRuntime().exec("putty " + a[index].ip.getHostAddress());
+                        Runtime.getRuntime().exec(a[index].onDoubleClick + " " + a[index].ip.getHostAddress());
                     } catch (IOException ex) {
                         System.err.println(ex);
                     }
