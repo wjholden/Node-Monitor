@@ -10,8 +10,8 @@ import java.util.Objects;
  */
 final public class Node implements Comparable<Node> {
     protected final InetAddress ip;
-    private final Long ipAsInteger;
-    private final String description;
+    protected final Long ipAsInteger;
+    protected final String description;
     protected final int interval, timeout;
     protected final String onDoubleClick;
     

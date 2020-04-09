@@ -6,9 +6,14 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.swing.JPanel;
 
 /**
@@ -17,22 +22,33 @@ import javax.swing.JPanel;
  */
 public final class NodePanel extends JPanel {
 
-    protected static int xoffset = 20;
-    protected static int yoffset = 50;
-    protected static float fontSize = 14;
+    protected int xoffset = 20;
+    protected int yoffset = 50;
+    protected float fontSize = 14;
     private final Node a[];
     private final Color c[];
+    private final List<Integer> order; // order in which nodes should be drawn on the screen.
+    private float brightness = 0.7f; // brightness is initially 70%
 
     public NodePanel(Node a[]) {
         this.a = a;
         c = new Color[a.length];
+        Arrays.fill(c, Color.BLACK); // initialize color list as all black.
+        
+        order = IntStream.range(0, a.length).boxed().collect(Collectors.toList());
+        
         ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(10);
         for (int i = 0; i < a.length; i++) {
             final int x = i;
             executor.scheduleAtFixedRate(
                 () -> {
                     try {
-                        c[x] = a[x].ip.isReachable(a[x].timeout * 1000) ? Color.GREEN : Color.RED;
+                        boolean reachable = a[x].ip.isReachable(a[x].timeout * 1000);
+                        // If the node is reachable then paint the box green, otherwise red.
+                        c[x] = new Color(reachable ? 0.0f : brightness * 1.0f,
+                                reachable ? brightness * 1.0f : 0.0f,
+                                0.0f);
+                        //c[x] = a[x].ip.isReachable(a[x].timeout * 1000) ? Color.GREEN : Color.RED;
                     } catch (IOException ex) {
                         c[x] = Color.BLUE;
                     }
@@ -84,11 +100,11 @@ public final class NodePanel extends JPanel {
                 final int px = x * width / r;
                 
                 if (index < a.length) {
-                    g.setColor(c[index]);
+                    g.setColor(c[order.get(index)]);
                     g.fillRect(px, py, width / r, height / r);
                     g.setColor(Color.BLACK);
                     int lineOffset = 0;
-                    for (String s : a[index].toString().split("\n")) {
+                    for (String s : a[order.get(index)].toString().split("\n")) {
                         g.drawString(s, px + xoffset, py + yoffset + lineOffset);
                         lineOffset += g.getFontMetrics().getHeight();
                     }
@@ -99,5 +115,45 @@ public final class NodePanel extends JPanel {
                 index++;
             }
         }
+    }
+    
+    public void increaseBrightness() {
+        assert(0.0f <= brightness && brightness <= 1.0f);
+
+        // The constant 0.7 is for compatibility with
+        // http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/src/share/classes/java/awt/Color.java#l626
+        // I'm not really in love with this constant.
+        // 0.7 looks too dark on my machine and 1.0 looks too bright.
+        brightness = Math.min(brightness / 0.7f, 1.0f);
+        
+        // This is only here to make the UI update immediately. These values
+        // will be overwritten by the next poll.
+        for (int i = 0 ; i < c.length ; i++) {
+            c[i] = c[i].brighter();
+        }
+    }
+    
+    public void decreaseBrightness() {
+        assert(0.0f <= brightness && brightness <= 1.0f);
+        brightness = Math.max(brightness * 0.7f, 0.0f);
+        
+        for (int i = 0 ; i < c.length ; i++) {
+            c[i] = c[i].darker();
+        }
+    }
+    
+    public void insertionOrder() {
+        assert(order.size() == a.length);
+        Collections.sort(order);
+    }
+    
+    public void ipAddressOrder() {
+        assert(order.size() == a.length);
+        Collections.sort(order, (l,r) -> a[l].ipAsInteger.compareTo(a[r].ipAsInteger));
+    }
+    
+    public void descriptionOrder() {
+        assert(order.size() == a.length);
+        Collections.sort(order, (l,r) -> a[l].description.compareTo(a[r].description));
     }
 }

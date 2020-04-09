@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -45,7 +44,7 @@ public class NodeMonitor {
                 }
             }
         }
-        Collections.sort(nodes);
+        //Collections.sort(nodes); // Don't change the insertion order. This happens in NodePanel.order array.
         MonitorFrame jf = new MonitorFrame(nodes.toArray(new Node[nodes.size()]));
         jf.addKeyListener(jf);
     }
